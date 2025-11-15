@@ -1,0 +1,143 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- HELPER FUNCTIONS ---
+    // Bir kullanıcının maçın katılımcısı olup olmadığını kontrol eder.
+    function isMatchParticipant(matchId) {
+      let matchData = get(/databases/$(database)/documents/matches/$(matchId)).data;
+      // participantUserIds array'ini kullanarak kontrol et
+      return request.auth.uid in matchData.participantUserIds;
+    }
+
+    // --- COLLECTION RULES ---
+
+    // Kullanıcı profilleri
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null &&
+                       (request.auth.uid == userId ||
+                        request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['pendingFriendRequests', 'sentFriendRequests', 'friends']));
+    }
+
+    // Bildirimler (Ana Koleksiyon olarak)
+    match /notifications/{notificationId} {
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null;
+    }
+
+    // Maçlar
+    match /matches/{matchId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+                       request.resource.data.createdBy == request.auth.uid;
+      
+      // NİHAİ DÜZELTME: Sadece maçın katılımcıları maçı güncelleyebilir.
+      allow update: if request.auth != null && isMatchParticipant(matchId);
+      
+      allow delete: if request.auth != null &&
+                       resource.data.createdBy == request.auth.uid;
+    }
+
+    // Davetler (invitations)
+    match /invitations/{invitationId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null &&
+                       (resource.data.fromUserId == request.auth.uid ||
+                        resource.data.toUserId == request.auth.uid);
+      allow delete: if request.auth != null &&
+                       resource.data.fromUserId == request.auth.uid;
+    }
+
+    // Takımlar
+    match /teams/{teamId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+                       request.resource.data.adminId == request.auth.uid;
+      allow update, delete: if request.auth != null &&
+                               resource.data.adminId == request.auth.uid;
+    }
+
+    // Gruplar/Kulüpler
+    match /groups/{groupId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+                       request.resource.data.adminId == request.auth.uid;
+      allow update: if request.auth != null && (
+                       resource.data.adminId == request.auth.uid ||
+                       request.auth.uid in resource.data.moderatorIds ||
+                       request.auth.uid in resource.data.memberIds
+                     );
+      allow delete: if request.auth != null &&
+                       resource.data.adminId == request.auth.uid;
+
+      // Grup mesajları
+      match /messages/{messageId} {
+        allow read: if request.auth != null &&
+                       request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds;
+        allow create: if request.auth != null &&
+                         request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds;
+        allow delete: if request.auth != null && (
+                         resource.data.userId == request.auth.uid ||
+                         request.auth.uid == get(/databases/$(database)/documents/groups/$(groupId)).data.adminId
+                       );
+      }
+    }
+
+    // Turnuvalar
+    match /tournaments/{tournamentId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+                       request.resource.data.organizerId == request.auth.uid;
+      // Admin ve organizatör her şeyi güncelleyebilir
+      allow update: if request.auth != null && (
+                       resource.data.organizerId == request.auth.uid ||
+                       request.auth.uid in resource.data.admins
+                     );
+      // Herkes sadece participantCount'u artırabilir (kayıt için)
+      allow update: if request.auth != null &&
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['participantCount']);
+      allow delete: if request.auth != null &&
+                       resource.data.organizerId == request.auth.uid;
+
+      // Turnuva kayıtları
+      match /registrations/{userId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null && userId == request.auth.uid;
+        allow delete: if request.auth != null && (
+                         userId == request.auth.uid ||
+                         request.auth.uid == get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.organizerId
+                       );
+        allow update: if request.auth != null &&
+                         request.auth.uid == get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.organizerId;
+      }
+
+      // Turnuva maçları
+      match /matches/{matchId} {
+        allow read: if request.auth != null;
+        allow create, update, delete: if request.auth != null && (
+                                          request.auth.uid == get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.organizerId ||
+                                          request.auth.uid in get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.admins
+                                        );
+      }
+
+      // Turnuva takımları
+      match /teams/{teamId} {
+        allow read: if request.auth != null;
+        // Herkes takım oluşturabilir (captainId kendi ID'si olmalı)
+        allow create: if request.auth != null && request.resource.data.captainId == request.auth.uid;
+        // Sadece kaptan takımını güncelleyebilir
+        allow update: if request.auth != null && resource.data.captainId == request.auth.uid;
+        // Sadece kaptan veya organizatör takımı silebilir
+        allow delete: if request.auth != null && (
+                         resource.data.captainId == request.auth.uid ||
+                         request.auth.uid == get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.organizerId
+                       );
+      }
+    }
+  }
+}
