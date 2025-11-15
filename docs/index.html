@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PlayMatchr - Spor partneri bul, maçlar oluştur, turnuvalara katıl! Tenis ve Padel için akıllı eşleşme platformu.">
+    <meta name="keywords" content="tenis, padel, spor partner, maç, turnuva, kort">
+    <title>PlayMatchr - Spor Partnerinizi Bulun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .app-icon {
+            width: 150px;
+            height: 150px;
+            border-radius: 30px;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1E3A8A;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #1E3A8A;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            border-radius: 16px;
+            background: #f8fafc;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: #1E3A8A;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .feature-card p {
+            color: #64748B;
+            line-height: 1.7;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        /* Support Section */
+        .support {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .support-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .support-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #64748B;
+        }
+
+        .contact-email {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #1E3A8A;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .contact-email:hover {
+            background: #3B82F6;
+        }
+
+        /* Footer */
+        footer {
+            background: #1E3A8A;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                margin-top: 20px;
+            }
+
+            nav a {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">PlayMatchr</div>
+                <nav>
+                    <a href="#features">Özellikler</a>
+                    <a href="#about">Hakkında</a>
+                    <a href="#support">Destek</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <img src="../assets/playmatchr_icon.png" alt="PlayMatchr Icon" class="app-icon">
+            <h1>Spor Partnerinizi Bulun!</h1>
+            <p>Tenis, Padel ve daha fazlası için akıllı eşleşme platformu</p>
+            <div class="download-buttons">
+                <a href="#" class="btn btn-primary">App Store'dan İndir</a>
+                <a href="#support" class="btn btn-secondary">Destek Al</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Özellikler</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎾</div>
+                    <h3>Maç Oluştur</h3>
+                    <p>Birkaç tıkla maç oluşturun ve yakınınızdaki oyuncuları davet edin. Tarih, saat ve konum seçimi kolayca yapın.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Turnuvalara Katıl</h3>
+                    <p>Yerel turnuvalara kayıt olun veya kendi turnuvanızı organize edin. Canlı fikstür ve sonuçları takip edin.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Gruplar Oluştur</h3>
+                    <p>Düzenli maç yapan gruplar oluşturun. Spor kulüplerine katılın ve topluluğunuzu büyütün.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Konum Bazlı Arama</h3>
+                    <p>GPS ile yakınınızdaki oyuncuları bulun. En yakın kortları ve maçları keşfedin.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Oyuncu Değerlendirme</h3>
+                    <p>Maç sonrası rakibinizi değerlendirin. Güvenilir ve sportmen oyuncularla eşleşin.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Akıllı Bildirimler</h3>
+                    <p>Yeni maç davetleri ve size uygun maç önerileri için anlık bildirim alın.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Neden PlayMatchr?</h2>
+            <div class="about-content">
+                <p>PlayMatchr, tenis ve padel severler için özel olarak tasarlanmış akıllı eşleşme platformudur. Artık tek başına kort aramak yok!</p>
+                <p>Kolay kullanımlı arayüzümüz, güvenli topluluk sistemi ve geniş oyuncu ağımız ile spor partneri bulmak hiç bu kadar kolay olmamıştı.</p>
+                <p>Hem yeni başlayanlar hem de deneyimli oyuncular için ideal. Üstelik temel özellikler tamamen ücretsiz!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="support" id="support">
+        <div class="container">
+            <h2 class="section-title">Destek & İletişim</h2>
+            <div class="support-content">
+                <p>Sorularınız mı var? Yardıma mı ihtiyacınız var? Size yardımcı olmaktan mutluluk duyarız!</p>
+                <a href="mailto:support@playmatchr.com" class="contact-email">support@playmatchr.com</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 PlayMatchr. Tüm hakları saklıdır.</p>
+            <p>Tenis, Padel ve daha fazlası için akıllı eşleşme platformu</p>
+        </div>
+    </footer>
+</body>
+</html>
