@@ -43,3 +43,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase Configuration Files (SENSITIVE - DO NOT COMMIT!)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Apple Developer Certificates & Keys (SENSITIVE - DO NOT COMMIT!)
+*.p8
+*.p12
+*.mobileprovision
+*.certSigningRequest
+*.cer
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
